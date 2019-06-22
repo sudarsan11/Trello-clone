@@ -1,0 +1,32 @@
+<div style="background-color: aliceblue;">
+
+
+  <form #cardForm="ngForm" (submit)="onSaveCard(cardForm)" >
+
+      <div class="form-group">
+          <input type="text" class="form-control" ngModel name="title" placeholder="Enter a card title">
+        </div>
+
+        <div class="form-group">
+          <textarea class="form-control" rows="5" ngModel name="description"  placeholder="Add a description"></textarea>
+        </div>
+
+        <div class="form-group" *ngFor="let comment of comments let i = index">
+          <input type="text" class="form-control comments" ngModel name="comment_{{i}}"  placeholder="Add a comment">
+        </div>
+
+        <div>
+          <i style="margin-left: 50%; cursor: pointer;" class="fa fa-plus" (click)="onAddNewComment()" aria-hidden="true"></i>
+        </div>
+
+        <div>
+          <button style="float: right;" type="submit" class="btn btn-primary">Save card</button>
+        </div>
+
+
+
+  </form>
+
+
+
+</div>
