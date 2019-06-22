@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ListService } from './list.service';
 import { CardInterface } from '../card/card.interface';
+import { CardService } from '../card/card.service';
 
 @Component({
   selector: 'app-list',
@@ -10,7 +11,7 @@ import { CardInterface } from '../card/card.interface';
 })
 export class ListComponent implements OnInit {
 
-  constructor(public listService: ListService) { }
+  constructor(public listService: ListService, public cardService: CardService) { }
 
   lists = [
     {
@@ -37,11 +38,26 @@ export class ListComponent implements OnInit {
   ];
 
   onClickAddCard(listIndex: number) {
+
     this.lists[listIndex].children.push({
-        title : '',
+        title :  '',
         description : '',
-        comments: ['', '']
+        comments:  []
     });
+
+    this.cardService.getCardUpdatedListener()
+      .subscribe( (updatedCard) => {
+
+        this.lists[listIndex].children.splice(this.lists[listIndex].children.length - 1, 1);
+
+        this.lists[listIndex].children.push({
+          title : updatedCard.title ,
+          description : updatedCard.description ,
+          comments: updatedCard.comments
+        });
+
+
+      })
   }
 
   drop(event: CdkDragDrop<{}[]>){

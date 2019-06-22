@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { CardService } from './card.service';
 
 @Component({
   selector: 'app-card',
@@ -8,7 +9,7 @@ import { NgForm } from '@angular/forms';
 })
 export class CardComponent implements OnInit {
 
-  constructor() { }
+  constructor(public cardService: CardService) { }
 
   comments = [1];
 
@@ -17,7 +18,26 @@ export class CardComponent implements OnInit {
   }
 
   onSaveCard(form: NgForm) {
-    console.log(form.value);
+
+    const formValues = form.value;
+    const cardComments = [];
+
+    for (const key in formValues) {
+      if (key.includes('comment')) {
+        cardComments.push(formValues[key]);
+      }
+    }
+
+
+    const newCard = {
+       title : form.value.title,
+       description: form.value.description,
+       comments : cardComments
+    }
+
+    this.cardService.setCard(newCard);
+
+
   }
 
   ngOnInit() {
