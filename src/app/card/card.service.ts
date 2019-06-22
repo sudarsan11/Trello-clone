@@ -8,9 +8,21 @@ export class CardService {
   card: CardInterface = {title: '', description: '', comments: []};
   private cardUpdated = new Subject<CardInterface>();
 
+  isEdit = false;
+
+
+  setIsEdit(status: boolean) {
+    this.isEdit = status;
+  }
+
+  getIsEdit() {
+    return this.isEdit;
+  }
+
   setCard(newCard: CardInterface) {
+    this.card = new CardInterface();
     this.card = newCard;
-    this.cardUpdated.next(newCard);
+    this.cardUpdated.next(this.card);
   }
 
   getCard() {

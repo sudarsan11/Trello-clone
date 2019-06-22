@@ -4,11 +4,11 @@
   <form #cardForm="ngForm" (submit)="onSaveCard(cardForm)" >
 
       <div class="form-group">
-          <input type="text" class="form-control" ngModel name="title" placeholder="Enter a card title">
+          <input type="text" class="form-control" ngModel name="title" [ngModel]="cardTitle" placeholder="Enter a card title" #title>
         </div>
 
         <div class="form-group">
-          <textarea class="form-control" rows="5" ngModel name="description"  placeholder="Add a description"></textarea>
+          <textarea class="form-control" rows="5" ngModel name="description" [ngModel]="cardDesc" placeholder="Add a description"></textarea>
         </div>
 
         <div class="form-group" *ngFor="let comment of comments let i = index">
@@ -20,7 +20,7 @@
         </div>
 
         <div>
-          <button style="float: right;" type="submit" class="btn btn-primary">Save card</button>
+          <button style="float: right;" [disabled]="title.value.length == 0" type="submit" class="btn btn-primary">Save card</button>
         </div>
 
 

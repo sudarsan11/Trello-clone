@@ -1,6 +1,5 @@
-<div class="container">
-
-    <div cdkDropListGroup>
+<div class="container-fluid" style="padding: 20px;">
+  <div cdkDropListGroup>
       <div class="example-container" *ngFor="let f of lists let listIndex = index">
         <h2>{{f.item}}</h2>
         <div class="example-list" *ngIf="f.children"
@@ -8,36 +7,37 @@
           [cdkDropListData]="f.children"
           (cdkDropListDropped)="drop($event)">
 
+            <div class="example-box" [ngClass]="{'new-card': showForm && item.item.length == 0}" *ngFor="let item of f.children let cardIndex = index" cdkDrag>
 
-            <div class="example-box" style="background-color: ghostwhite;" *ngFor="let item of f.children" cdkDrag>
+              <mat-list>
 
-                <mat-list  *ngIf="item.title.length > 0">
+                <mat-list-item><h5>{{item.item}}</h5></mat-list-item>
+                <mat-list-item class="text-muted">{{item.description}}</mat-list-item>
 
-                      <mat-list-item class="display-4"><h4>{{item.title}}</h4></mat-list-item>
-                      <mat-list-item class="text-muted">{{item.description}}</mat-list-item>
-
-                      <mat-list style="margin-left:30px;">
-
-                        <mat-list-item  *ngFor="let comment of item.comments">
-                            <i class="fa fa-caret-right" aria-hidden="true" style="margin: 5px;"></i>
-                            {{comment}}
-                        </mat-list-item>
-                      </mat-list>
-
+                <mat-list style="margin-left:30px">
+                    <mat-list-item  *ngFor="let comment of item.comments">
+                        <i class="fa fa-caret-right" aria-hidden="true" style="margin: 5px;"></i>
+                        {{comment}}
+                    </mat-list-item>
                 </mat-list>
 
+              </mat-list>
 
 
-                <app-card   *ngIf="item.title.length == 0" style="width: 100%"></app-card>
+              <div class="row col-2" *ngIf=" item.item.length > 0">
+                  <i class="fa fa-pencil" style="padding-right: 8px; cursor: pointer;" (click)="onUpdateCard(listIndex, cardIndex)"></i>
+                  <i class="fa fa-trash" style="color: red; cursor: pointer;" (click)="onDeleteCard(listIndex, cardIndex)"></i>
+              </div>
 
+              <app-card style="width: 100%" *ngIf="showForm && item.item.length == 0" ></app-card>
             </div>
 
-
-            <div><i style="margin-left: 50%; cursor: pointer;" (click)="onClickAddCard(listIndex)"
+            <div><i style="margin-left: 50%; cursor: pointer;" *ngIf="!disableAddCard" (click)="onAddCard(listIndex)"
               class="fa fa-plus" aria-hidden="true"></i></div>
+
 
         </div>
       </div>
     </div>
-
 </div>
+

@@ -13,6 +13,11 @@ export class CardComponent implements OnInit {
 
   comments = [1];
 
+  isEdit = false;
+  cardTitle: string;
+  cardDesc: string;
+  cardComments: Array<string>;
+
   onAddNewComment() {
     this.comments.push(1);
   }
@@ -35,12 +40,21 @@ export class CardComponent implements OnInit {
        comments : cardComments
     }
 
+    console.log(newCard);
     this.cardService.setCard(newCard);
-
 
   }
 
   ngOnInit() {
+
+    this.isEdit = this.cardService.getIsEdit();
+
+    if (this.isEdit) {
+      const editedCard = this.cardService.getCard();
+      this.cardTitle = editedCard.title;
+      this.cardDesc  = editedCard.description;
+      this.cardComments = editedCard.comments;
+    }
   }
 
 }

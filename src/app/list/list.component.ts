@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ListService } from './list.service';
-import { CardInterface } from '../card/card.interface';
 import { CardService } from '../card/card.service';
 
 @Component({
@@ -12,61 +11,98 @@ import { CardService } from '../card/card.service';
 export class ListComponent implements OnInit {
 
   constructor(public listService: ListService, public cardService: CardService) { }
+  showForm = false;
+  disableAddCard = false;
 
   lists = [
     {
       item: 'List #1',
-      children: [
-        {
-          title : 'Frontend',
-          description : 'Work on lists and card components',
-          comments: ['Create card', 'Add to list']
-        }
+      children:[
+        { item: 'Admiral Flankson', description: 'A big sentence for description' , comments: ['comm 1', 'comm 2']},
       ]
     },
-
     {
       item: 'List #2',
       children: [
-        {
-          title : 'Backend',
-          description : 'Work on API',
-          comments: ['Create card API', 'Add to list API']
-        }
-      ],
+        { item: 'Admiral Parkour', description: 'A big sentence for description', comments: ['comm 1', 'comm 2'] },
+      ]
+    },
+    {
+      item: 'List #3',
+      children: [
+        { item: 'Admiral Tombs',  description: 'A big sentence for description' , comments: ['comm 1', 'comm 2']},
+      ]
+    },
+    {
+      item: 'List #4',
+      children: [
+        { item: 'Admiral Tombs',  description: 'A big sentence for description', comments: ['comm 1', 'comm 2'] },
+      ]
+
     }
-  ];
+  ]
 
-  onClickAddCard(listIndex: number) {
+  onDeleteCard(listIndex: number, cardIndex: number) {
+    this.lists[listIndex].children.splice(cardIndex, 1);
+  }
 
-    this.lists[listIndex].children.push({
-        title :  '',
-        description : '',
-        comments:  []
-    });
 
-    this.cardService.getCardUpdatedListener()
+  onUpdateCard(listIndex: number, cardIndex: number) {
+
+
+    this.cardService.setCard({title: this.lists[listIndex].children[cardIndex].item,
+       description: this.lists[listIndex].children[cardIndex].description, comments: []});
+
+    this.lists[listIndex].children[cardIndex].item = '';
+    this.lists[listIndex].children[cardIndex].description = '';
+    this.lists[listIndex].children[cardIndex].comments = [];
+
+    this.showForm = true;
+    this.disableAddCard = true;
+    this.cardService.setIsEdit(true);
+
+    const cardSub = this.cardService.getCardUpdatedListener()
+    .subscribe( (updatedCard) => {
+
+      this.lists[listIndex].children[cardIndex] = ({item: updatedCard.title, description: updatedCard.description,
+         comments: updatedCard.comments});
+      cardSub.unsubscribe();
+      this.disableAddCard = false;
+      this.showForm = false;
+      this.cardService.setIsEdit(false);
+    })
+  }
+
+
+  onAddCard(listIndex: number) {
+
+    this.disableAddCard = true;
+    this.lists[listIndex].children.push({item: '', description: '', comments: []});
+    this.showForm = true;
+
+    const cardSub = this.cardService.getCardUpdatedListener()
       .subscribe( (updatedCard) => {
 
-        this.lists[listIndex].children.splice(this.lists[listIndex].children.length - 1, 1);
-
-        this.lists[listIndex].children.push({
-          title : updatedCard.title ,
-          description : updatedCard.description ,
-          comments: updatedCard.comments
-        });
-
-
+        this.lists[listIndex].children[this.lists[listIndex].children.length - 1 ] = ({item: updatedCard.title,
+           description: updatedCard.description, comments: updatedCard.comments });
+        cardSub.unsubscribe();
+        this.disableAddCard = false;
       })
+
+
   }
 
   drop(event: CdkDragDrop<{}[]>){
-    if(event.previousContainer === event.container){
+    if (event.previousContainer === event.container){
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
     }
+
+    console.log(this.lists);
   }
+
+
 
   ngOnInit() {
 
