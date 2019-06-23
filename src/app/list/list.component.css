@@ -75,3 +75,13 @@
   padding-right: 50px;
   background-color: aliceblue;
 }
+
+.new-list {
+  padding: 100px;
+  margin-top: 50px;
+  text-align: center;
+  background-color: ghostwhite;
+  border-color: #ccc;
+  border: dotted;
+  border-color: #ccc;
+}

@@ -32,12 +32,27 @@
               <app-card style="width: 100%" *ngIf="showForm && item.item.length == 0" ></app-card>
             </div>
 
-            <div><i style="margin-left: 50%; cursor: pointer;" *ngIf="!disableAddCard" (click)="onAddCard(listIndex)"
-              class="fa fa-plus" aria-hidden="true"></i></div>
+            <div *ngIf="!disableAddCard"  (click)="onAddCard(listIndex)" style="text-align: center;">
+              <i style="cursor: pointer; padding: 5px;"  class="fa fa-plus" aria-hidden="true"></i>
+              <p>Add a new card</p>
+            </div>
 
 
         </div>
       </div>
-    </div>
+
+
+      <div class="example-container new-list">
+          <button *ngIf="!showListForm" class="btn btn-success" (click)="onAddNewList()" >Add new list</button>
+          <form *ngIf="showListForm" (submit)="onCreateList(listForm)" #listForm = "ngForm">
+              <div class="form-group">
+                  <input type="text" class="form-control" ngModel name="title"  placeholder="Enter list title" #title>
+              </div>
+              <button class="btn btn-primary" [disabled]="title.value.length == 0" type="submit">Create List</button>
+          </form>
+      </div>
+
+  </div>
+
 </div>
 

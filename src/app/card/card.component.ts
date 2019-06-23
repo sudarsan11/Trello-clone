@@ -53,6 +53,18 @@ export class CardComponent implements OnInit {
       const editedCard = this.cardService.getCard();
       this.cardTitle = editedCard.title;
       this.cardDesc  = editedCard.description;
+
+      console.log(this.cardTitle);
+      console.log(this.cardDesc);
+      console.log(document.getElementsByClassName('card-comments'));
+
+
+      const htmlFormCards = document.getElementsByClassName('card-comments');
+
+      for (let i=0; i<htmlFormCards.length; i++) {
+        console.log(htmlFormCards[i]);
+      }
+
       this.cardComments = editedCard.comments;
     }
   }

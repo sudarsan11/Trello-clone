@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ListService } from './list.service';
 import { CardService } from '../card/card.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-list',
@@ -10,8 +11,9 @@ import { CardService } from '../card/card.service';
 })
 export class ListComponent implements OnInit {
 
-  constructor(public listService: ListService, public cardService: CardService) { }
+  constructor(public cardService: CardService) { }
   showForm = false;
+  showListForm = false;
   disableAddCard = false;
 
   lists = [
@@ -92,6 +94,25 @@ export class ListComponent implements OnInit {
 
   }
 
+  onCreateList(form: NgForm) {
+
+    this.lists.push({
+      item: form.value.title,
+      children: [{item: '', description : '', comments: []}]
+    });
+
+    const listSize = this.lists.length - 1;
+    const childSize = this.lists[listSize].children.length - 1;
+
+    this.lists[listSize].children.splice(childSize, 1);
+    this.showListForm = false;
+  }
+
+  onAddNewList() {
+
+    this.showListForm = true;
+  }
+
   drop(event: CdkDragDrop<{}[]>){
     if (event.previousContainer === event.container){
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -99,7 +120,6 @@ export class ListComponent implements OnInit {
       transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
     }
 
-    console.log(this.lists);
   }
 
 

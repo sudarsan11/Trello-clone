@@ -12,11 +12,11 @@
         </div>
 
         <div class="form-group" *ngFor="let comment of comments let i = index">
-          <input type="text" class="form-control card-comments" ngModel name="comment_{{i}}"  placeholder="Add a comment">
+          <input type="text" class="form-control card-comments" ngModel name="comment_{{i}}" [ngModel]="cardComments" placeholder="Add a comment">
         </div>
 
-        <div>
-          <i style="margin-left: 50%; cursor: pointer;" class="fa fa-plus" (click)="onAddNewComment()" aria-hidden="true"></i>
+        <div class="row">
+          <i style="margin-left: 20%; cursor: pointer;" class="fa fa-plus" (click)="onAddNewComment()" aria-hidden="true">Add a new comment</i>
         </div>
 
         <div>

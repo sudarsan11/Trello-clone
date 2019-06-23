@@ -10,12 +10,14 @@ import { FormsModule } from '@angular/forms';
 import {MatCardModule} from '@angular/material/card';
 import { CardComponent } from './card/card.component';
 import {MatListModule} from '@angular/material/list';
+import { BoardComponent } from './board/board.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ListComponent,
-    CardComponent
+    CardComponent,
+    BoardComponent
   ],
   imports: [
     BrowserModule,
