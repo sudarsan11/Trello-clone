@@ -11,11 +11,15 @@ import { NgForm } from '@angular/forms';
 })
 export class ListComponent implements OnInit {
 
-  constructor(public cardService: CardService) { }
+  constructor(public listService: ListService, public cardService: CardService) { }
   showForm = false;
   showListForm = false;
   disableAddCard = false;
 
+
+  lists = [];
+
+  /*
   lists = [
     {
       item: 'List #1',
@@ -44,31 +48,58 @@ export class ListComponent implements OnInit {
     }
   ]
 
+  */
+
+  // When user deletes an existing card
   onDeleteCard(listIndex: number, cardIndex: number) {
+
+    // Get _id of mongo docs
+    const listID = this.lists[listIndex]._id;
+    const cardID = this.lists[listIndex].children[cardIndex]._id;
+
+    // Delete in local
     this.lists[listIndex].children.splice(cardIndex, 1);
+
+    // Delete in DB
+    this.listService.deleteCard(listID, cardID);
   }
 
 
   onUpdateCard(listIndex: number, cardIndex: number) {
 
-
+    // To prepopulate the values in form
     this.cardService.setCard({title: this.lists[listIndex].children[cardIndex].item,
        description: this.lists[listIndex].children[cardIndex].description, comments: []});
 
+    // Reset current values
     this.lists[listIndex].children[cardIndex].item = '';
     this.lists[listIndex].children[cardIndex].description = '';
     this.lists[listIndex].children[cardIndex].comments = [];
 
+    // Enable edit mode
     this.showForm = true;
     this.disableAddCard = true;
     this.cardService.setIsEdit(true);
 
+    // Subscribe and get the updated card value
     const cardSub = this.cardService.getCardUpdatedListener()
     .subscribe( (updatedCard) => {
 
+      // Get _id of mongo docs
+      const listID = this.lists[listIndex]._id;
+      const cardID = this.lists[listIndex].children[cardIndex]._id;
+
+      // Update values in DB
+      this.listService.updateCard(listID, cardID, updatedCard);
+
+      // Update the local array
       this.lists[listIndex].children[cardIndex] = ({item: updatedCard.title, description: updatedCard.description,
-         comments: updatedCard.comments});
+      comments: updatedCard.comments});
+
+      // Unsubscribe from event
       cardSub.unsubscribe();
+
+      // Disable edit mode
       this.disableAddCard = false;
       this.showForm = false;
       this.cardService.setIsEdit(false);
@@ -76,18 +107,31 @@ export class ListComponent implements OnInit {
   }
 
 
+  // When user adds a card to an existing list
   onAddCard(listIndex: number) {
 
+    // Disable adding cards further before adding current card
     this.disableAddCard = true;
+    // Push a dummy card into list to create a box
     this.lists[listIndex].children.push({item: '', description: '', comments: []});
+    // Show the form to get card data
     this.showForm = true;
 
+    // Get the new card value submitted using the form
     const cardSub = this.cardService.getCardUpdatedListener()
       .subscribe( (updatedCard) => {
 
+        // Push it to local array
         this.lists[listIndex].children[this.lists[listIndex].children.length - 1 ] = ({item: updatedCard.title,
            description: updatedCard.description, comments: updatedCard.comments });
+
+        // Push the new card to DB
+        this.listService.createCard( this.lists[listIndex]._id, updatedCard);
+
+        // Unsubscribe from the event
         cardSub.unsubscribe();
+
+        // Allow adding new cards
         this.disableAddCard = false;
       })
 
@@ -113,7 +157,10 @@ export class ListComponent implements OnInit {
     this.showListForm = true;
   }
 
+  // When the user drags the card
   drop(event: CdkDragDrop<{}[]>){
+
+    // If within same list
     if (event.previousContainer === event.container){
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -122,9 +169,17 @@ export class ListComponent implements OnInit {
 
   }
 
-
-
   ngOnInit() {
+
+    // Fetch the initial lists from DB
+    this.listService.fetchLists()
+      .subscribe(list => {
+        this.lists = list.fetchedLists;
+        console.log(this.lists);
+      }, error => {
+        alert('Something went wrong');
+        console.log(error);
+      });
 
   }
 }

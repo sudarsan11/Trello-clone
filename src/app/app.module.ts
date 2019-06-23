@@ -1,15 +1,16 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { ListComponent } from './list/list.component';
+import {HttpClientModule} from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
 import {MatCardModule} from '@angular/material/card';
-import { CardComponent } from './card/card.component';
 import {MatListModule} from '@angular/material/list';
+
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { ListComponent } from './list/list.component';
+import { CardComponent } from './card/card.component';
 import { BoardComponent } from './board/board.component';
 
 @NgModule({
@@ -26,7 +27,8 @@ import { BoardComponent } from './board/board.component';
     DragDropModule,
     FormsModule,
     MatListModule,
-    MatCardModule
+    MatCardModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
