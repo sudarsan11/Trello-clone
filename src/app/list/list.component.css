@@ -27,7 +27,11 @@
   box-sizing: border-box;
   cursor: move;
   background-color: ghostwhite;
+  max-height: 400px;
+  overflow: scroll;
   font-size: 14px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
 }
 
 .cdk-drag-preview {
@@ -80,8 +84,15 @@
   padding: 100px;
   margin-top: 50px;
   text-align: center;
-  background-color: ghostwhite;
+  background-color: rgb(231, 231, 240);
   border-color: #ccc;
-  border: dotted;
-  border-color: #ccc;
+
+}
+
+.list-bg {
+    background-color: white;
+    padding: 20px;
+    -webkit-box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.75);
 }

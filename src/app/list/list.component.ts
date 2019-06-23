@@ -175,10 +175,45 @@ export class ListComponent implements OnInit {
   drop(event: CdkDragDrop<{}[]>){
 
     // If within same list
-    if (event.previousContainer === event.container){
+    if (event.previousContainer === event.container) {
+
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      const ind = event.container.id.substr(event.container.id.length - 1);
+      const listID = this.lists[ind]._id;
+
+      this.listService.updateList(this.lists[ind], listID)
+        .subscribe(res => {
+          console.log(res);
+        }, err => {
+          alert('Something went wrong');
+          console.log(err);
+        });
+
     } else {
       transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+
+      const currInd = event.previousContainer.id.substr(event.previousContainer.id.length - 1);
+      const currlistID = this.lists[currInd]._id;
+
+      const nextInd = event.container.id.substr(event.container.id.length - 1);
+      const nextlistID = this.lists[nextInd]._id;
+
+      this.listService.updateList(this.lists[currInd], currlistID)
+      .subscribe(res => {
+        console.log(res);
+      }, err => {
+        alert('Something went wrong');
+        console.log(err);
+      });
+
+      this.listService.updateList(this.lists[nextInd], nextlistID)
+      .subscribe(res => {
+        console.log(res);
+      }, err => {
+        alert('Something went wrong');
+        console.log(err);
+      });
+
     }
 
   }

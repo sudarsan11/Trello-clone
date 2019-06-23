@@ -56,6 +56,11 @@ export class ListService {
   // Create a new list
   createList(list: any) {
     return this.http.post<{message: string, createdList: any}>(url + 'api/list/create-list', list).pipe();
-}
+  }
+
+  // Drag cards within list
+  updateList(list: any, listID: string) {
+    return this.http.post<{meesage: string}>(url + 'api/list/update-list/' + listID, list).pipe();
+  }
 
 }
