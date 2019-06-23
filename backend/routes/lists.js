@@ -2,39 +2,32 @@ const express = require('express');
 const router =  express.Router();
 const List   = require('../models/list');
 
-router.get('/create-list', (req,res,next) => {
 
+// On creating a new list
+router.post('/create-list', (req,res,next) => {
+
+  // Create list using values in request
   const list = new List({
-    item: 'List #1',
-    children:[
-      { item: 'Admiral Flankson', description: 'A big sentence for description' , comments: ['comm 1', 'comm 2']},
-      { item: 'Admiral', description: 'A big description' , comments: ['comm 1', '']},
-    ]
+    item: req.body.item,
+    children: req.body.children
   });
 
+
+  // Save the list
   list.save()
     .then( savedList => {
       console.log(savedList);
+      res.status(200).json({message: 'List created successfully', createdList: savedList});
     })
     .catch(err => {
       console.log(err);
+      res.status(500).json({message: err});
     })
 
-  res.status(200).json({message: 's'});
+
 });
 
 
-router.get('/delete-list/:listID', (req,res,next) => {
-
-    List.findByIdAndDelete({"_id": req.params.listID})
-      .then (res => {
-        console.log(res);
-        res.status(200).json({message: 'List deleted'});
-      })
-      .catch(err => {
-        console.log(err);
-      })
-})
 
 // Fetch all the lists created
 router.get('/fetch-lists', (req,res,next) => {
@@ -55,6 +48,8 @@ router.get('/fetch-lists', (req,res,next) => {
 
 // When user creates a card within a list
 router.post('/create-card/:listID/', (req,res,next) => {
+
+  console.log('create card path');
 
   // Find list by _id and push the new card by _id
   List.update( {"_id": req.params.listID},
@@ -82,11 +77,12 @@ router.post('/create-card/:listID/', (req,res,next) => {
 // When user updates a card within a list
 router.post('/update-card/:listID/:cardID', (req,res,next) => {
 
-
+  // Find by list id and card id
   List.findOneAndUpdate(
 
     {"_id" : req.params.listID, "children._id": req.params.cardID},
 
+    // Set the new values
     {
       "$set" : {
         "children.$.item" : req.body.title,

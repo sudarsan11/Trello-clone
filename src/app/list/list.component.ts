@@ -64,7 +64,7 @@ export class ListComponent implements OnInit {
     this.listService.deleteCard(listID, cardID);
   }
 
-
+  // When user updates an existing card
   onUpdateCard(listIndex: number, cardIndex: number) {
 
     // To prepopulate the values in form
@@ -138,22 +138,36 @@ export class ListComponent implements OnInit {
 
   }
 
+  // On creating a new list
   onCreateList(form: NgForm) {
 
+    // Push a dummy card to list
     this.lists.push({
       item: form.value.title,
       children: [{item: '', description : '', comments: []}]
     });
 
+    // Get the indices
     const listSize = this.lists.length - 1;
     const childSize = this.lists[listSize].children.length - 1;
 
+    // Remove the dummy card and show add card button
     this.lists[listSize].children.splice(childSize, 1);
     this.showListForm = false;
+
+    // Creating a list in DB
+    this.listService.createList(this.lists[listSize])
+      .subscribe(res => {
+        window.location.reload();
+      }, err => {
+        alert('Something went wrong');
+        console.log(err);
+      });
+
   }
 
+  // On adding a new list show a form to get list title
   onAddNewList() {
-
     this.showListForm = true;
   }
 

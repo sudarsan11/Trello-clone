@@ -18,37 +18,43 @@ export class CardComponent implements OnInit {
   cardDesc: string;
   cardComments: Array<string>;
 
+  // When user adds a new form field for comment
   onAddNewComment() {
+    // Push a dummy value to dummy array for displaying new field
     this.comments.push(1);
   }
 
+  // When user saves the card
   onSaveCard(form: NgForm) {
 
     const formValues = form.value;
     const cardComments = [];
 
+    // Get values with the key name 'comment' from the form
     for (const key in formValues) {
       if (key.includes('comment')) {
         cardComments.push(formValues[key]);
       }
     }
 
-
+    // Create a new card
     const newCard = {
        title : form.value.title,
        description: form.value.description,
        comments : cardComments
     }
 
-    console.log(newCard);
+    // Set the card value
     this.cardService.setCard(newCard);
 
   }
 
   ngOnInit() {
 
+    // Check if the card is being edited
     this.isEdit = this.cardService.getIsEdit();
 
+    // If being edited prepopulate values
     if (this.isEdit) {
       const editedCard = this.cardService.getCard();
       this.cardTitle = editedCard.title;

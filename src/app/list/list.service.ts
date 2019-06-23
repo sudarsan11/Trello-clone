@@ -53,4 +53,9 @@ export class ListService {
     return this.http.get<{message: string, fetchedLists: any}>(url + 'api/list/fetch-lists').pipe();
   }
 
+  // Create a new list
+  createList(list: any) {
+    return this.http.post<{message: string, createdList: any}>(url + 'api/list/create-list', list).pipe();
+}
+
 }
