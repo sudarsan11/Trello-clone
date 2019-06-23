@@ -1,3 +1,12 @@
+#Demo GIF
+![](trello.gif)
+
+#To run the project
+1) Clone the repository
+2) Install all the dependencies (npm install -f)
+3) Navigate trello-clone/ and run angular app (ng serve)
+4) Navigate trello-clone/src and run node app (node server.js)
+
 # TrelloClone
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.1.

@@ -39,11 +39,30 @@ router.get('/fetch-lists', (req,res,next) => {
     })
     .catch(err => {
       console.log(err);
+      res.status(500).json({message: err});
     })
 
 
 })
 
+
+// When user changes card position within a list
+router.post('/update-list/:listID/', (req,res,next) => {
+
+  List.updateOne({"_id": req.params.listID},
+    {
+    "children": req.body.children
+    }
+  )
+    .then(updatedLists=> {
+      res.status(200).json({message: 'Fetched lists successfully'});
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({message: err});
+    })
+
+})
 
 
 // When user creates a card within a list
