@@ -19,7 +19,7 @@ app.use ((req,res,next) => {
 
 mongoose
   .connect(
-    "mongodb+srv://sudarsan:fARtELmBAC9VcUlw@cluster0-ohcdv.mongodb.net/Trello?retryWrites=true&w=majority"
+    ""
     , { useNewUrlParser: true })
   .then(() => {
     console.log("Connected to database!");
